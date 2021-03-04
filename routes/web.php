@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,3 +23,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+Route::get('auth/user', function() {
+
+    if(auth()->check())
+        return response()->json([
+            'authUser' => auth()->user()
+        ]);
+
+    return null;
+
+});
+Route::get('/chat/{chat}', '\App\Http\Controllers\ChatController@show')->name('chat.show');
+Route::get('/chat/{chat}/get_users', '\App\Http\Controllers\ChatController@get_users')->name('chat.get_users');
+Route::get('/chat/{chat}/get_messages/', '\App\Http\Controllers\ChatController@get_messages')->name('chat.get_messages');
+Route::get('chat/with/{user}', 'App\Http\Controllers\ChatController@chat_with');
+Route::post('message/sent', '\App\Http\Controllers\MessageController@sent');
+
